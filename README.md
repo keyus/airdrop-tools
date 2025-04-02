@@ -23,11 +23,13 @@ HKEY_LOCAL_MACHINE\SOFTWARE\WOW6432Node\Google\Chrome\Extensions
 > npm install
 
 #### 启动前端 server
-> npm run dev
+> npm run dev:frontend
 
+#### 构建前端文件 
+> npm run build:frontend
 
-#### 启动测试软件环境
-> npm run devsoft
+#### 启动python 开发软件环境
+> npm run start
 
-#### 打包软件
-> npm run soft
+#### 打包windows exe软件
+> npm run build:windows
