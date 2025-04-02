@@ -25,5 +25,9 @@ HKEY_LOCAL_MACHINE\SOFTWARE\WOW6432Node\Google\Chrome\Extensions
 #### 启动前端 server
 > npm run dev
 
+
+#### 启动测试软件环境
+> npm run devsoft
+
 #### 打包软件
 > npm run soft

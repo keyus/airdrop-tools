@@ -4,11 +4,11 @@
   "version": "0.1.3",
   "type": "module",
   "scripts": {
-    "dev": "rsbuild dev",
-    "build": "rsbuild build",
-    "webview": "py main.py",
-    "start": "bun run dev && bun run webview",
-    "soft": "bun run build && pyinstaller build-windows.spec"
+    "dev:frontend": "rsbuild dev",
+    "build:frontend": "rsbuild build",
+    "dev:backend": "py main.py",
+    "start": "concurrently \"bun run dev:frontend\"  \"bun run dev:backend\"",
+    "build:windows": "bun run build:frontend && pyinstaller build-windows.spec"
   },
   "dependencies": {
     "@ant-design/icons": "^5.6.1",
@@ -27,6 +27,7 @@
     "@types/react": "^19.0.12",
     "@types/react-dom": "^19.0.4",
     "@types/react-router": "^5.1.20",
-    "typescript": "^5.8.2"
+    "typescript": "^5.8.2",
+    "concurrently": "^9.1.2"
   }
 }
