@@ -2,10 +2,9 @@ import webview
 from service.api import Api
 import sys
 
-if getattr(sys, "frozen", False):
-    ui = './distFrontend/index.html'
-else:
-    ui = "http://localhost:3000/"
+isProduction = getattr(sys, "frozen", False)
+ui = './distFrontend/index.html' if isProduction else "http://localhost:3000/"
+debug = not isProduction
 
 
 def create_window():
@@ -24,4 +23,4 @@ def create_window():
 
 if __name__ == "__main__":
     window = create_window()
-    webview.start(debug=True)
+    webview.start(debug=debug)

@@ -8,7 +8,7 @@
     "build": "rsbuild build",
     "webview": "py main.py",
     "start": "bun run dev && bun run webview",
-    "soft": "pyinstaller build-windows.spec"
+    "soft": "bun run build && pyinstaller build-windows.spec"
   },
   "dependencies": {
     "@ant-design/icons": "^5.6.1",
