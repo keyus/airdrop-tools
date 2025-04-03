@@ -4,10 +4,10 @@
   "version": "0.1.3",
   "type": "module",
   "scripts": {
-    "dev:frontend": "rsbuild dev",
+    "dev": "rsbuild dev",
     "build:frontend": "rsbuild build",
     "dev:backend": "py main.py",
-    "start": "concurrently \"bun run dev:frontend\"  \"bun run dev:backend\"",
+    "start": "bun run dev:backend",
     "build:windows": "bun run build:frontend && pyinstaller build-windows.spec"
   },
   "dependencies": {

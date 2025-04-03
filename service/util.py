@@ -12,3 +12,7 @@ def app_path():
 def get_app_config():
     with open(f"{app_path()}/storage/config.json", "r") as f:
         return json.load(f)
+
+def get_url_config():
+    with open(f"{app_path()}/storage/url.json", "r") as f:
+        return json.load(f)

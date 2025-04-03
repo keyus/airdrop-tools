@@ -1,6 +1,4 @@
 import os
 
-abspath = os.path.abspath(__file__)
-print(abspath)
-print(os.path.dirname(abspath))
-
+url_config = ["http://baidu.com", "http://google.com"]
+print(*url_config)

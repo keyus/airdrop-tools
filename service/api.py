@@ -4,7 +4,7 @@ import time
 import os
 from service.chrome_extension import Chrome_Extension
 from service.app_config import App_Config
-from service.util import get_app_config
+from service.util import get_app_config, get_url_config
 
 
 config = get_app_config()
@@ -34,15 +34,25 @@ class Api:
     # 打开chrome
     def open_chrome(self, names: list[str] | str):
         config = get_app_config()
+        url_config = get_url_config()
         chrome_path = os.path.join(config["chrome_path"], "chrome.exe")
-        
+
         if isinstance(names, str):
             names = [names]
         for name in names:
             user_data_dir = os.path.join(config["user_data_dir"], name)
-            process = subprocess.Popen(
-                [chrome_path, f"--user-data-dir={user_data_dir}"]
-            )
+            if isinstance(url_config, list) and len(url_config) > 0:
+                process = subprocess.Popen(
+                    [
+                        chrome_path,
+                        f"--user-data-dir={user_data_dir}",
+                        *url_config,
+                    ]
+                )
+            else:
+                process = subprocess.Popen(
+                    [chrome_path, f"--user-data-dir={user_data_dir}"]
+                )
             open_chrome_process.append(
                 {
                     "name": name,
