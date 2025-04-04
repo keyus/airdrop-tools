@@ -7,18 +7,9 @@ from service.app_config import App_Config
 from service.util import get_app_config, get_url_config
 
 
-config = get_app_config()
-
 # chrome_path = "C:\\Program Files\\Google\\Chrome\\Application\\chrome.exe"
 # user_data_dir = "--user-data-dir=d:\\chrome100 app\\"
 # telegram_path = "D:\\telegram100-app\\"
-
-chrome_path = config["chrome_path"]
-user_data_dir = config["user_data_dir"]
-telegram_path = config["telegram_path"]
-
-
-print(chrome_path, user_data_dir, telegram_path)
 
 # 打开的chrome进程
 open_chrome_process = []
