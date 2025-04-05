@@ -1,5 +1,5 @@
-import { useMemo, useState } from 'react'
-import { Button, Modal, Input, Form, Tabs, } from 'antd'
+import { useMemo, } from 'react'
+import { Button, Modal, Input, Form, Tabs, Switch} from 'antd'
 import { useBoolean, useMount } from 'ahooks';
 
 
@@ -65,7 +65,6 @@ function WalletConfig({ onOk }: { onOk: () => void }) {
     useMount(async () => {
         const config_wallet = await window.pywebview.api.app_config.get_wallet_config();
         const value = config_wallet.join('\n')
-        console.log(value)
         form.setFieldsValue({
             walletConfig: value
         })
@@ -110,44 +109,54 @@ function WalletConfig({ onOk }: { onOk: () => void }) {
 function OpenUrlConfig(props: { onOk: () => void }) {
     const { onOk } = props;
     const [form] = Form.useForm();
-    const urlConfigValue = Form.useWatch('urlConfig', form)
-    const onSubmit = async ({ urlConfig }) => {
-        if (urlConfig) {
-            urlConfig = urlConfig.split('\n')
-            urlConfig = urlConfig.map((item: string) => item.trim()).filter((item: string) => item)
+    const urlValue = Form.useWatch('url', form)
+    const onSubmit = async ({ url, use }) => {
+        if (url) {
+            url = url.split('\n')
+            url = url.map((item: string) => item.trim()).filter((item: string) => item)
         } else {
-            urlConfig = []
+            url = []
         }
-        await window.pywebview.api.app_config.set_url_config(urlConfig)
+        await window.pywebview.api.app_config.set_url_config({
+            url,
+            use,
+        })
         window.message.success('浏览器启动网址配置成功');
         onOk()
     }
     useMount(async () => {
         const urlConfig = await window.pywebview.api.app_config.get_url_config();
-        const value = urlConfig.join('\n')
+        const value = urlConfig.url.join('\n')
+        const use = urlConfig.use
         form.setFieldsValue({
-            urlConfig: value
+            url: value,
+            use,
         })
     })
 
     const urlLens = useMemo(() => {
-        if (Array.isArray(urlConfigValue)) {
-            return urlConfigValue.length
+        if (Array.isArray(urlValue)) {
+            return urlValue.filter(it => it).length
         } else {
-            return urlConfigValue?.split('\n').length || 0
+            return urlValue?.split('\n').filter((it: any) => it).length || 0
         }
-    }, [urlConfigValue])
+    }, [urlValue])
     return (
         <Form
             form={form}
-            layout='vertical'
             onFinish={onSubmit}
         >
             <Form.Item
-                name='urlConfig'
+                name='url'
                 extra={`当前url数量：${urlLens}`}
             >
-                <Input.TextArea rows={10} />
+                <Input.TextArea rows={8} />
+            </Form.Item>
+            <Form.Item
+                label='是否启用'
+                name='use'
+            >
+                <Switch checkedChildren='启用' unCheckedChildren='禁用' />
             </Form.Item>
             <Form.Item
                 style={{ textAlign: 'right' }}

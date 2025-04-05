@@ -6,6 +6,8 @@ export default function Setting() {
 
     useMount(async () => {
         const app_config = await window.pywebview.api.app_config.get_app_config()
+        console.log(app_config);
+        
         form.setFieldsValue(app_config)  
     })
 

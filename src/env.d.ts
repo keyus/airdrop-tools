@@ -52,8 +52,8 @@ declare interface Window {
       app_config: {
         set_wallet_config: (wallet_config: string) => Promise<any>
         get_wallet_config: () => Promise<string[]>
-        set_url_config: (url_config: string) => Promise<any>
-        get_url_config: () => Promise<string[]>
+        set_url_config: (options: Record<string, any>) => Promise<any>
+        get_url_config: () => Promise<Record<string, any>>
         set_app_config: (app_config: string) => Promise<any>
         get_app_config: () => Promise<string[]>
       }

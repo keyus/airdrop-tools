@@ -26,18 +26,20 @@ class Api:
     def open_chrome(self, names: list[str] | str):
         config = get_app_config()
         url_config = get_url_config()
+        url = url_config["url"]
+        use = url_config["use"]
         chrome_path = os.path.join(config["chrome_path"], "chrome.exe")
 
         if isinstance(names, str):
             names = [names]
         for name in names:
             user_data_dir = os.path.join(config["user_data_dir"], name)
-            if isinstance(url_config, list) and len(url_config) > 0:
+            if use and isinstance(url, list) and len(url) > 0:
                 process = subprocess.Popen(
                     [
                         chrome_path,
                         f"--user-data-dir={user_data_dir}",
-                        *url_config,
+                        *url,
                     ]
                 )
             else:
