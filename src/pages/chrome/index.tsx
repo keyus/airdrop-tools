@@ -40,7 +40,7 @@ export default function Chrome(props = {}) {
     // 每3秒检查一次进程是否存在
     useInterval(async () => {
         checkProcess()
-    }, 3500)
+    }, 2000)
 
     useUpdateEffect(() => {
         if (open) {

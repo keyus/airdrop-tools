@@ -70,18 +70,42 @@ class Chrome_Extension:
             # 打开注册表
             with winreg.ConnectRegistry(None, winreg.HKEY_LOCAL_MACHINE) as hklm:
                 try:
-                    extensions_key = winreg.OpenKey(
-                        hklm,
-                        extensions_path,
-                        0,
-                        winreg.KEY_ALL_ACCESS
-                    )
-                    # 删除扩展键
-                    winreg.DeleteKey(extensions_key, extension_id)
-                    winreg.CloseKey(extensions_key)
-                    
+                    # 首先检查扩展键是否存在
+                    try:
+                        extensions_key = winreg.OpenKey(
+                            hklm,
+                            extensions_path,
+                            0,
+                            winreg.KEY_READ
+                        )
+                        
+                        # 尝试打开扩展子键检查是否存在
+                        try:
+                            winreg.OpenKey(extensions_key, extension_id)
+                            # 扩展存在，关闭并重新打开以获取删除权限
+                            winreg.CloseKey(extensions_key)
+                            
+                            # 重新打开带完全访问权限
+                            extensions_key = winreg.OpenKey(
+                                hklm,
+                                extensions_path,
+                                0,
+                                winreg.KEY_ALL_ACCESS
+                            )
+                            # 删除扩展键
+                            winreg.DeleteKey(extensions_key, extension_id)
+                            print(f"Extension {extension_id} successfully uninstalled")
+                        except WindowsError:
+                            # 扩展不存在，不需要删除
+                            print(f"Extension {extension_id} not found, no need to uninstall")
+                        finally:
+                            winreg.CloseKey(extensions_key)
+                            
+                    except WindowsError as e:
+                        print(f"Extensions path not found: {str(e)}")
+                        
                 except WindowsError as e:
-                    raise Exception(f"Failed to remove extension: {str(e)}")
+                    print(f"Failed to access registry: {str(e)}")
                     
         except Exception as e:
-            raise Exception(f"Error uninstalling Chrome extension: {str(e)}")
+            print(f"Error uninstalling Chrome extension: {str(e)}")

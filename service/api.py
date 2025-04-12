@@ -117,7 +117,6 @@ class Api:
         global open_telegram_process
 
         if len(open_chrome_process) > 0:
-            time.sleep(1)
             for item in open_chrome_process:
                 if item["pid"] in pids:
                     print("chrome进程存在3", item["pid"])
@@ -127,7 +126,6 @@ class Api:
                     continue
 
         if len(open_telegram_process) > 0:
-            time.sleep(1)
             for item in open_telegram_process:
                 if item["pid"] in pids:
                     print("telegram进程存在", item["pid"])
