@@ -1,6 +1,6 @@
 import { createRoot } from "react-dom/client";
 import App from "./App";
-import { ConfigProvider, App as AntdApp } from 'antd'
+import { ConfigProvider, App as AntdApp, message } from 'antd'
 import zhCN from 'antd/locale/zh_CN';
 import { createHashRouter, RouterProvider, } from 'react-router'
 import Chrome from './pages/chrome'
@@ -8,7 +8,9 @@ import ChromeApp from './pages/chrome_app'
 import Setting from './pages/setting'
 import '@ant-design/v5-patch-for-react-19';
 
-
+message.config({
+    maxCount: 1,
+});
 createRoot(document.getElementById("root")).render(
     <ConfigProvider
         locale={zhCN}
