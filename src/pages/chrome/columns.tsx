@@ -38,7 +38,7 @@ export default function columns(props: Props) {
             render(row:any) {
                 const location = getLocation(row.name)
                 if(location){
-                    return <Paragraph copyable style={{color: '#999'}}>{location.nordVpn}</Paragraph>
+                    return <Paragraph copyable style={{color: '#999', marginBottom: 0}}>{location.nordVpn}</Paragraph>
                 }
                 return (
                     <span>-</span>
@@ -51,7 +51,7 @@ export default function columns(props: Props) {
             render(row:any) {
                 const location = getLocation(row.name)
                 if(location){
-                    return <Paragraph copyable style={{color: '#999'}}>{location.protonVpn}</Paragraph>
+                    return <Paragraph copyable style={{color: '#999', marginBottom: 0}}>{location.protonVpn}</Paragraph>
                 }
                 return (
                     <span>-</span>

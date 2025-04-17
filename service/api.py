@@ -1,10 +1,10 @@
 import subprocess
 import psutil
-import time
 import os
 from service.chrome_extension import Chrome_Extension
 from service.app_config import App_Config
 from service.util import get_app_config, get_url_config
+from service.bookmark import enable_bookmark_bar, add_name_bookmark
 
 
 # chrome_path = "C:\\Program Files\\Google\\Chrome\\Application\\chrome.exe"
@@ -21,7 +21,7 @@ class Api:
     def __init__(self):
         self.chrome_extension = Chrome_Extension()
         self.app_config = App_Config()
-
+        
     # 打开chrome
     def open_chrome(self, names: list[str] | str):
         config = get_app_config()
@@ -34,17 +34,29 @@ class Api:
             names = [names]
         for name in names:
             user_data_dir = os.path.join(config["user_data_dir"], name)
+            
+            # 在启动Chrome前修改Preferences文件启用书签栏
+            enable_bookmark_bar(user_data_dir)
+            
+            # 添加不可修改的书签
+            add_name_bookmark(user_data_dir, name)
+            
             if use and isinstance(url, list) and len(url) > 0:
                 process = subprocess.Popen(
                     [
                         chrome_path,
+                        "--start-maximized",  # 最大化窗口
                         f"--user-data-dir={user_data_dir}",
                         *url,
                     ]
                 )
             else:
                 process = subprocess.Popen(
-                    [chrome_path, f"--user-data-dir={user_data_dir}"]
+                    [
+                        chrome_path, 
+                        "--start-maximized",  # 最大化窗口
+                        f"--user-data-dir={user_data_dir}"
+                    ]
                 )
             open_chrome_process.append(
                 {
