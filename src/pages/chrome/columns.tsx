@@ -1,8 +1,7 @@
-import { EnvironmentOutlined, } from '@ant-design/icons'
-import { Space, Button, } from 'antd'
+import { Space, Button, Typography } from 'antd'
 import { ReactComponent as Chromeicon } from '@/assets/chrome.svg'
 import { ReactComponent as Tgicon } from '@/assets/telegram.svg'
-import dayjs from 'dayjs'
+import locations from './locations.json'
 
 interface Props {
     openChromeOne: (name: string) => void
@@ -11,6 +10,10 @@ interface Props {
     closeTgOne: (name: string) => void
 }
 
+const { Paragraph } = Typography
+const getLocation = (name: string) => {
+    return locations.find((item) => item.name === name)
+}
 export default function columns(props: Props) {
     const { openChromeOne, closeChromeOne, openTgOne, closeTgOne } = props
     return [
@@ -30,21 +33,28 @@ export default function columns(props: Props) {
             }
         },
         {
-            title: '最近打开',
-            dataIndex: 'last_open_time',
-            width: 120,
-            render(val: string) {
-                if (!val) return
-                return dayjs(val).format('MM-DD HH:mm')
+            title: 'nordVpn',
+            width: 140,
+            render(row:any) {
+                const location = getLocation(row.name)
+                if(location){
+                    return <Paragraph copyable style={{color: '#999'}}>{location.nordVpn}</Paragraph>
+                }
+                return (
+                    <span>-</span>
+                )
             }
         },
         {
-            title: 'IP',
-            dataIndex: 'ip',
+            title: 'protonVpn',
             width: 140,
-            render(val: string) {
+            render(row:any) {
+                const location = getLocation(row.name)
+                if(location){
+                    return <Paragraph copyable style={{color: '#999'}}>{location.protonVpn}</Paragraph>
+                }
                 return (
-                    <Space><span style={{ color: '#1677ff' }}><EnvironmentOutlined /></span>{val}</Space>
+                    <span>-</span>
                 )
             }
         },

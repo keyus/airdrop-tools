@@ -1,5 +1,9 @@
 import os
 import json
+import time
+
+
+
 user_path = os.environ.get('APPDATA')
 # 获取 AppData 路径
 appdata = os.environ.get('APPDATA')
@@ -20,3 +24,5 @@ except FileNotFoundError:
     print("文件不存在")
 except Exception as e:
     print(f"读取文件时出错: {e}")
+
+time.sleep(5)
