@@ -1,7 +1,8 @@
-import { Space, Button, Typography } from 'antd'
+import { Space, Button, Typography, message } from 'antd'
 import { ReactComponent as Chromeicon } from '@/assets/chrome.svg'
 import { ReactComponent as Tgicon } from '@/assets/telegram.svg'
 import locations from './locations.json'
+import copy from 'copy-to-clipboard'
 
 interface Props {
     openChromeOne: (name: string) => void
@@ -20,13 +21,16 @@ export default function columns(props: Props) {
         {
             title: '编号/名称',
             dataIndex: 'name',
-            width: 120,
+            width: 140,
             fixed: 'left',
             render(val: string) {
                 if (!val) return '-'
                 const isTag = val.toLowerCase().includes('58e0')
                 return (
-                    <span className={isTag ? 'tag-58e0' : ''}>
+                    <span className={isTag ? 'tag-58e0' : ''} onClick={() => {
+                        copy(val)
+                        message.success('复制成功')
+                    }}>
                         {val}
                     </span>
                 )
@@ -35,27 +39,33 @@ export default function columns(props: Props) {
         {
             title: 'nordVpn',
             width: 140,
-            render(row:any) {
+            render(row: any) {
                 const location = getLocation(row.name)
-                if(location){
-                    return <Paragraph copyable style={{color: '#999', marginBottom: 0}}>{location.nordVpn}</Paragraph>
+                if (location) {
+                    return (
+                        <span onClick={() => {
+                            copy(location.nordVpn)
+                            message.success('复制成功')
+                        }}>{location.nordVpn}</span>
+                    )
                 }
-                return (
-                    <span>-</span>
-                )
+                return '-'
             }
         },
         {
             title: 'protonVpn',
             width: 140,
-            render(row:any) {
+            render(row: any) {
                 const location = getLocation(row.name)
-                if(location){
-                    return <Paragraph copyable style={{color: '#999', marginBottom: 0}}>{location.protonVpn}</Paragraph>
+                if (location) {
+                    return (
+                        <span onClick={() => {
+                            copy(location.protonVpn)
+                            message.success('复制成功')
+                        }}>{location.protonVpn}</span>
+                    )
                 }
-                return (
-                    <span>-</span>
-                )
+                return '-'
             }
         },
         {
