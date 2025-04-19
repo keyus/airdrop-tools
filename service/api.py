@@ -45,7 +45,6 @@ class Api:
                 process = subprocess.Popen(
                     [
                         chrome_path,
-                        "--start-maximized",  # 最大化窗口
                         f"--user-data-dir={user_data_dir}",
                         *url,
                     ]
@@ -54,7 +53,6 @@ class Api:
                 process = subprocess.Popen(
                     [
                         chrome_path, 
-                        "--start-maximized",  # 最大化窗口
                         f"--user-data-dir={user_data_dir}"
                     ]
                 )
