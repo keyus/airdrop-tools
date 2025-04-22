@@ -1,8 +1,6 @@
 
 // 使用认证前请先完成webshare的ip授权
 
-const webshare_proxy_key = "qp3ib2jesv7dxajv53uzdl4ri72h7zzr9n0h3del"
-
 let authCredentials = {
     username: "kissabcd",
     password: "kissabcd00"
