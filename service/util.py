@@ -94,11 +94,16 @@ def get_name_proxy(name: str):
 def start_init():
     app_storage_path = get_app_storage_path()
     app_extensions_path = get_app_extensions_path()
-    if os.path.exists(user_data_path):
-        #删除用户数据目录
-        shutil.rmtree(user_data_path)
     if not os.path.exists(user_data_path):
         shutil.copytree(app_storage_path, user_data_path)
         shutil.copytree(app_extensions_path, user_extensions_path)
     
     
+def clear_user_data():
+    app_storage_path = get_app_storage_path()
+    app_extensions_path = get_app_extensions_path()
+    # 删除用户数据目录,并重新复制
+    if os.path.exists(user_data_path):
+        shutil.rmtree(user_data_path)
+    shutil.copytree(app_storage_path, user_data_path)
+    shutil.copytree(app_extensions_path, user_extensions_path)

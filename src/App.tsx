@@ -1,7 +1,7 @@
 import { useState } from 'react'
 import { NavLink, Outlet, useMatches } from 'react-router'
 import { useMount } from 'ahooks'
-import { Avatar, Skeleton, App as AntdApp } from 'antd'
+import { Avatar, Skeleton, App as AntdApp, Button, Modal } from 'antd'
 import { GlobalOutlined, OneToOneOutlined, DesktopOutlined, CloudServerOutlined } from '@ant-design/icons'
 import LogoSvg from './assets/logo.svg?react'
 import "./App.css";
@@ -20,6 +20,23 @@ function App() {
       setReady(true)
     })
   })
+
+  const clearCache = () => {
+    Modal.confirm({
+      title: '清除缓存',
+      content: '是否清除缓存？',
+      okText: '清除',
+      cancelText: '取消',
+      onOk() {
+        window.pywebview.api.clear_cache().then(() => {
+          useapp.message.success('清除缓存成功');
+        }).catch(() => {
+          useapp.message.error('清除缓存失败');
+        })
+      },
+    })
+
+  }
 
   return (
     <AntdApp className='root-app'>
@@ -49,6 +66,7 @@ function App() {
         <header className='main-header'>
           <h2>{title}</h2>
           <div className='set'>
+            <Button type='link' onClick={clearCache}>清除缓存</Button>
             <Avatar size={40}>USER</Avatar>
           </div>
         </header>

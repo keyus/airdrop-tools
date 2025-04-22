@@ -9,6 +9,7 @@ from service.util import (
     get_proxy_config, 
     user_extensions_path,
     get_name_proxy,
+    clear_user_data,
 )
 from service.bookmark import enable_bookmark_bar, add_name_bookmark
 
@@ -160,3 +161,7 @@ class Api:
             "open_chrome_process": open_chrome_process,
             "open_telegram_process": open_telegram_process,
         }
+
+
+    def clear_cache(self):
+        clear_user_data()

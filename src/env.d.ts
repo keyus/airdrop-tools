@@ -60,6 +60,7 @@ declare interface Window {
         set_wallet_config: (wallet_config: string) => Promise<any>
         set_app_config: (app_config: string) => Promise<any>
       }
+      clear_cache: () => Promise<void>
     }
   }
   message: MessageInstance
