@@ -3,7 +3,13 @@ import psutil
 import os
 from service.chrome_extension import Chrome_Extension
 from service.app_config import App_Config
-from service.util import get_app_config, get_url_config
+from service.util import (
+    get_app_config, 
+    get_url_config, 
+    get_proxy_config, 
+    user_extensions_path,
+    get_name_proxy,
+)
 from service.bookmark import enable_bookmark_bar, add_name_bookmark
 
 
@@ -26,36 +32,41 @@ class Api:
     def open_chrome(self, names: list[str] | str):
         config = get_app_config()
         url_config = get_url_config()
+        proxy_config = get_proxy_config()
         url = url_config["url"]
-        use = url_config["use"]
+        
         chrome_path = os.path.join(config["chrome_path"], "chrome.exe")
+        # 加载扩展  webshare.io代理插件
+        proxy_extensions = os.path.join(user_extensions_path, "proxy")
 
         if isinstance(names, str):
             names = [names]
+            
         for name in names:
             user_data_dir = os.path.join(config["user_data_dir"], name)
+            proxy = get_name_proxy(name)
+            if proxy:
+                ip,port,username,password = proxy.split(":")
+                proxy = [f"--proxy-server={ip}:{port}"]
+                print("ks", ip, port)
             
             # 在启动Chrome前修改Preferences文件启用书签栏
             enable_bookmark_bar(user_data_dir)
-            
-            # 添加不可修改的书签
+            # 添加书签
             add_name_bookmark(user_data_dir, name)
-            
-            if use and isinstance(url, list) and len(url) > 0:
-                process = subprocess.Popen(
-                    [
-                        chrome_path,
-                        f"--user-data-dir={user_data_dir}",
-                        *url,
-                    ]
-                )
-            else:
-                process = subprocess.Popen(
-                    [
-                        chrome_path, 
-                        f"--user-data-dir={user_data_dir}"
-                    ]
-                )
+            if not url_config["use"]:
+                url = []
+            if not proxy_config["use"]:
+                proxy = []
+            process = subprocess.Popen(
+                [
+                    chrome_path, 
+                    f"--user-data-dir={user_data_dir}",
+                    f"--load-extension={proxy_extensions}",
+                    *proxy,
+                    *url,
+                ]
+            )
             open_chrome_process.append(
                 {
                     "name": name,
@@ -129,16 +140,18 @@ class Api:
         if len(open_chrome_process) > 0:
             for item in open_chrome_process:
                 if item["pid"] in pids:
-                    print("chrome进程存在3", item["pid"])
+                    # print("chrome进程存在3", item["pid"])
+                    pass
                 else:
-                    print("chrome", item["pid"], "不存在")
+                    # print("chrome", item["pid"], "不存在")
                     open_chrome_process.remove(item)
                     continue
 
         if len(open_telegram_process) > 0:
             for item in open_telegram_process:
                 if item["pid"] in pids:
-                    print("telegram进程存在", item["pid"])
+                    # print("telegram进程存在", item["pid"])
+                    pass
                 else:
                     open_telegram_process.remove(item)
                     continue

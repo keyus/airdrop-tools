@@ -3,6 +3,7 @@ from service.util import (
     config_json_path,
     wallet_json_path,
     url_json_path,
+    proxy_json_path,
 )
 
 class App_Config:
@@ -31,3 +32,11 @@ class App_Config:
     def set_app_config(self, app_config: dict) -> None:
         with open(config_json_path, "w") as f:
             f.write(json.dumps(app_config))
+            
+    def get_proxy_config(self) -> dict:
+        with open(proxy_json_path, "r") as f:
+            return json.load(f)
+
+    def set_proxy_config(self, proxy_config: dict) -> None:
+        with open(proxy_json_path, "w") as f:
+            f.write(json.dumps(proxy_config))

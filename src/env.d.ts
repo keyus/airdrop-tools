@@ -50,12 +50,15 @@ declare interface Window {
         test: () => Promise<void>
       }
       app_config: {
-        set_wallet_config: (wallet_config: string) => Promise<any>
-        get_wallet_config: () => Promise<string[]>
-        set_url_config: (options: Record<string, any>) => Promise<any>
         get_url_config: () => Promise<Record<string, any>>
-        set_app_config: (app_config: string) => Promise<any>
+        get_proxy_config: () => Promise<Record<string, any>>
+        get_wallet_config: () => Promise<string[]>
         get_app_config: () => Promise<string[]>
+
+        set_url_config: (options: Record<string, any>) => Promise<any>
+        set_proxy_config: (proxy_config: Record<string, any>) => Promise<any>
+        set_wallet_config: (wallet_config: string) => Promise<any>
+        set_app_config: (app_config: string) => Promise<any>
       }
     }
   }

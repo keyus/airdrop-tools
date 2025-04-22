@@ -27,8 +27,13 @@ export default function ConfigNet({ onConfigWallet }:
                     items={[
                         {
                             key: 'url',
-                            label: '浏览器启动网址',
+                            label: '启动网址',
                             children: <OpenUrlConfig onOk={toggle} />
+                        },
+                        {
+                            key: 'proxy',
+                            label: '代理配置',
+                            children: <ProxyConfig onOk={toggle} />
                         },
                         {
                             key: 'wallet',
@@ -47,6 +52,8 @@ export default function ConfigNet({ onConfigWallet }:
     )
 }
 
+
+//钱包配置
 function WalletConfig({ onOk }: { onOk: () => void }) {
 
     const [form] = Form.useForm();
@@ -106,6 +113,7 @@ function WalletConfig({ onOk }: { onOk: () => void }) {
     )
 }
 
+//url配置
 function OpenUrlConfig(props: { onOk: () => void }) {
     const { onOk } = props;
     const [form] = Form.useForm();
@@ -167,6 +175,78 @@ function OpenUrlConfig(props: { onOk: () => void }) {
                     size='large'
                 >
                     保存url配置
+                </Button>
+            </Form.Item>
+        </Form>
+    )
+}
+
+
+
+//代理配置
+function ProxyConfig(props: { onOk: () => void }) {
+    const { onOk } = props;
+    const [form] = Form.useForm();
+    const proxyValue = Form.useWatch('proxy', form)
+    const onSubmit = async ({ proxy, use }) => {
+        if (proxy) {
+            proxy = proxy.split('\n')
+            proxy = proxy.map((item: string) => item.trim()).filter((item: string) => item)
+        } else {
+            proxy = []
+        }
+        await window.pywebview.api.app_config.set_proxy_config({
+            proxy,
+            use,
+        })
+        window.message.success('代理配置成功');
+        onOk()
+    }
+    useMount(async () => {
+        const proxyConfig = await window.pywebview.api.app_config.get_proxy_config();
+        console.log("proxyConfig",proxyConfig)
+
+        const value = proxyConfig.proxy.join('\n');
+        const use = proxyConfig.use;
+        form.setFieldsValue({
+            proxy: value,
+            use,
+        })
+    })
+
+    const lens = useMemo(() => {
+        if (Array.isArray(proxyValue)) {
+            return proxyValue.filter(it => it).length
+        } else {
+            return proxyValue?.split('\n').filter((it: any) => it).length || 0
+        }
+    }, [proxyValue])
+    return (
+        <Form
+            form={form}
+            onFinish={onSubmit}
+        >
+            <Form.Item
+                name='proxy'
+                extra={`当前有效的代理数量：${lens}`}
+            >
+                <Input.TextArea rows={8} />
+            </Form.Item>
+            <Form.Item
+                label='是否启用'
+                name='use'
+            >
+                <Switch checkedChildren='启用' unCheckedChildren='禁用' />
+            </Form.Item>
+            <Form.Item
+                style={{ textAlign: 'right' }}
+            >
+                <Button
+                    type='primary'
+                    htmlType='submit'
+                    size='large'
+                >
+                    保存代理配置
                 </Button>
             </Form.Item>
         </Form>
