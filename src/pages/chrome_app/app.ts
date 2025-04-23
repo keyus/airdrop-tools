@@ -7,6 +7,9 @@ import protonIcon from '../../assets/app/proton.png'
 import nordvpnIcon from '../../assets/app/nordvpn.png'
 import surfsharkIcon from '../../assets/app/surfshark.png'
 import canvasblockerIcon from '../../assets/app/canvasblocker.png'
+import webshareIcon from '../../assets/app/webshare.png'
+
+
 export default [
     {
         id: 'mcohilncbfahbmgdjkbpemcciiolgcge',
@@ -71,4 +74,11 @@ export default [
         description: 'Fingerprint Protect',
         url: 'https://chromewebstore.google.com/detail/canvas-blocker-fingerprin/nomnklagbgmgghhjidfhnoelnjfndfpd'
     },
+    {
+        id: "bdokeillmfmaogjpficejjcjekcflkdh",
+        name: 'Webshare',
+        icons: webshareIcon,
+        description: 'Webshare',
+        url: 'https://chromewebstore.google.com/detail/webshare-proxy-extension/bdokeillmfmaogjpficejjcjekcflkdh'
+    }
 ]
