@@ -33,15 +33,23 @@ class Api:
     def open_chrome(self, names: list[str] | str):
         config = get_app_config()
         url_config = get_url_config()
+        proxy_config = get_proxy_config()
         url = url_config["url"]
         
         chrome_path = os.path.join(config["chrome_path"], "chrome.exe")
+        # 加载扩展  webshare.io代理插件
+        proxy_extensions = os.path.join(user_extensions_path, "proxy")
 
         if isinstance(names, str):
             names = [names]
             
         for name in names:
             user_data_dir = os.path.join(config["user_data_dir"], name)
+            proxy = get_name_proxy(name)
+            if proxy:
+                ip,port,username,password = proxy.split(":")
+                proxy = [f"--proxy-server={ip}:{port}"]
+                print("ks", ip, port)
             
             # 在启动Chrome前修改Preferences文件启用书签栏
             enable_bookmark_bar(user_data_dir)
@@ -49,10 +57,14 @@ class Api:
             add_name_bookmark(user_data_dir, name)
             if not url_config["use"]:
                 url = []
+            if not proxy_config["use"]:
+                proxy = []
             process = subprocess.Popen(
                 [
                     chrome_path, 
                     f"--user-data-dir={user_data_dir}",
+                    f"--load-extension={proxy_extensions}",
+                    *proxy,
                     *url,
                 ]
             )

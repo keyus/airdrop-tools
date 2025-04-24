@@ -1,7 +1,7 @@
-import { useMemo, } from 'react'
-import { Button, Modal, Input, Form, Tabs, Switch} from 'antd'
-import { useBoolean, useMount } from 'ahooks';
-
+import { useMemo,  } from 'react'
+import { Button, Modal, Input, Form, Tabs, Switch,  } from 'antd'
+import { useBoolean, useMount,  } from 'ahooks';
+import IpAuth from './IpAuth';
 
 export default function ConfigNet({ onConfigWallet }:
     { onConfigWallet: () => void }
@@ -20,6 +20,7 @@ export default function ConfigNet({ onConfigWallet }:
                 title='环境配置'
                 open={open}
                 destroyOnClose
+                mask={false}
                 onCancel={toggle}
                 footer={null}
             >
@@ -204,8 +205,6 @@ function ProxyConfig(props: { onOk: () => void }) {
     }
     useMount(async () => {
         const proxyConfig = await window.pywebview.api.app_config.get_proxy_config();
-        console.log("proxyConfig",proxyConfig)
-
         const value = proxyConfig.proxy.join('\n');
         const use = proxyConfig.use;
         form.setFieldsValue({
@@ -221,34 +220,43 @@ function ProxyConfig(props: { onOk: () => void }) {
             return proxyValue?.split('\n').filter((it: any) => it).length || 0
         }
     }, [proxyValue])
+
     return (
-        <Form
-            form={form}
-            onFinish={onSubmit}
-        >
-            <Form.Item
-                name='proxy'
-                extra={`当前有效的代理数量：${lens}`}
+        <>
+            <Form
+                name='proxyConfig'
+                form={form}
+                onFinish={onSubmit}
             >
-                <Input.TextArea rows={8} />
-            </Form.Item>
-            <Form.Item
-                label='是否启用'
-                name='use'
-            >
-                <Switch checkedChildren='启用' unCheckedChildren='禁用' />
-            </Form.Item>
-            <Form.Item
-                style={{ textAlign: 'right' }}
-            >
-                <Button
-                    type='primary'
-                    htmlType='submit'
-                    size='large'
+                <Form.Item
+                    name='proxy'
+                    extra={`当前有效的代理数量：${lens}`}
                 >
-                    保存代理配置
-                </Button>
-            </Form.Item>
-        </Form>
+                    <Input.TextArea rows={8} />
+                </Form.Item>
+                <Form.Item
+                    label='是否启用'
+                    name='use'
+                >
+                    <Switch checkedChildren='启用' unCheckedChildren='禁用' />
+                </Form.Item>
+                <Form.Item
+                    label='Ip授权'
+                >
+                    <IpAuth/>
+                </Form.Item>
+                <Form.Item
+                    style={{ textAlign: 'right' }}
+                >
+                    <Button
+                        type='primary'
+                        htmlType='submit'
+                        size='large'
+                    >
+                        保存代理配置
+                    </Button>
+                </Form.Item>
+            </Form>
+        </>
     )
 }
