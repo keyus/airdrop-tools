@@ -8,6 +8,7 @@ import nordvpnIcon from '../../assets/app/nordvpn.png'
 import surfsharkIcon from '../../assets/app/surfshark.png'
 import canvasblockerIcon from '../../assets/app/canvasblocker.png'
 import webshareIcon from '../../assets/app/webshare.png'
+import keplrIcon from '../../assets/app/keplr.png'
 
 
 export default [
@@ -31,6 +32,13 @@ export default [
         icons: suiIcon,
         description: 'A wallet for Sui',
         url: 'https://chromewebstore.google.com/detail/sui-wallet/opcgpfmipidbgpenhmajoajpbobppdil?hl=zh-CN&utm_source=ext_sidebar'
+    },
+    {
+        id: 'dmkamcknogkgcdfhhbddcghachkejeap',
+        name: 'Keplr',
+        icons: keplrIcon,
+        description: "Keplr is a browser extension",
+        url: 'https://chromewebstore.google.com/detail/keplr/dmkamcknogkgcdfhhbddcghachkejeap',
     },
     {
         id: 'jiidiaalihmmhddjgbnbgdfflelocpak',
