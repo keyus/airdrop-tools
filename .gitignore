@@ -15,7 +15,9 @@ __pycache__/
 *.so
 .Python
 storage/proxy.json
-
+**/__pycache__
+**/webshare.txt
+**/private_key.py
 build
 node_modules
 dist

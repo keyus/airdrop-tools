@@ -4,6 +4,7 @@ from service.util import (
     wallet_json_path,
     url_json_path,
     proxy_json_path,
+    webshare_txt_path,
 )
 
 class App_Config:
@@ -35,8 +36,20 @@ class App_Config:
             
     def get_proxy_config(self) -> dict:
         with open(proxy_json_path, "r") as f:
-            return json.load(f)
+            proxy_config = json.load(f)
+        with open(webshare_txt_path, "r") as f:
+            proxy_list = f.readlines()
+            proxy_list = [x.strip() for x in proxy_list]
+            proxy_config["proxy"] = proxy_list
+        return proxy_config
 
     def set_proxy_config(self, proxy_config: dict) -> None:
+        use = proxy_config["use"]
+        proxy = proxy_config["proxy"]
         with open(proxy_json_path, "w") as f:
-            f.write(json.dumps(proxy_config))
+            f.write(json.dumps({
+                "use": use,
+            }))
+        with open(webshare_txt_path, "w") as f:
+            for p in proxy:
+                f.write(p + '\n')

@@ -3,16 +3,17 @@ import psutil
 import os
 from service.chrome_extension import Chrome_Extension
 from service.app_config import App_Config
+from service.webshare import Webshare
 from service.util import (
     get_app_config, 
     get_url_config, 
     get_proxy_config, 
-    user_extensions_path,
+    # user_extensions_path,
     get_name_proxy,
     clear_user_data,
 )
 from service.bookmark import enable_bookmark_bar, add_name_bookmark
-
+from service.testnet.monad.monad import Monad
 
 # chrome_path = "C:\\Program Files\\Google\\Chrome\\Application\\chrome.exe"
 # user_data_dir = "--user-data-dir=d:\\chrome100 app\\"
@@ -28,6 +29,8 @@ class Api:
     def __init__(self):
         self.chrome_extension = Chrome_Extension()
         self.app_config = App_Config()
+        self.testnet = Monad()
+        self.webshare = Webshare()
         
     # 打开chrome
     def open_chrome(self, names: list[str] | str):
@@ -38,8 +41,6 @@ class Api:
         
         chrome_path = os.path.join(config["chrome_path"], "chrome.exe")
         # 加载扩展  webshare.io代理插件
-        proxy_extensions = os.path.join(user_extensions_path, "proxy")
-
         if isinstance(names, str):
             names = [names]
             
@@ -47,8 +48,8 @@ class Api:
             user_data_dir = os.path.join(config["user_data_dir"], name)
             proxy = get_name_proxy(name)
             if proxy:
-                ip,port,username,password = proxy.split(":")
-                proxy = [f"--proxy-server={ip}:{port}"]
+                ip,port= proxy.split(":")
+                proxy = [f"--proxy-server=socks=socks5://{ip}:{port}"]
                 print("ks", ip, port)
             
             # 在启动Chrome前修改Preferences文件启用书签栏
@@ -63,7 +64,6 @@ class Api:
                 [
                     chrome_path, 
                     f"--user-data-dir={user_data_dir}",
-                    f"--load-extension={proxy_extensions}",
                     *proxy,
                     *url,
                 ]
@@ -165,3 +165,5 @@ class Api:
 
     def clear_cache(self):
         clear_user_data()
+        
+  

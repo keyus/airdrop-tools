@@ -9,6 +9,7 @@ interface Props {
     closeChromeOne: (name: string) => void
     openTgOne: (name: string) => void
     closeTgOne: (name: string) => void
+    runShmonad: (name: string) => void
 }
 
 const { Paragraph } = Typography
@@ -16,7 +17,7 @@ const getLocation = (name: string) => {
     return locations.find((item) => item.name === name)
 }
 export default function columns(props: Props) {
-    const { openChromeOne, closeChromeOne, openTgOne, closeTgOne } = props
+    const { openChromeOne, closeChromeOne, openTgOne, closeTgOne, runShmonad } = props
     return [
         {
             title: '编号/名称',
@@ -38,7 +39,7 @@ export default function columns(props: Props) {
         },
         {
             title: 'nordVpn',
-            width: 140,
+            width: 120,
             render(row: any) {
                 const location = getLocation(row.name)
                 if (location) {
@@ -54,7 +55,7 @@ export default function columns(props: Props) {
         },
         {
             title: 'protonVpn',
-            width: 140,
+            width: 100,
             render(row: any) {
                 const location = getLocation(row.name)
                 if (location) {
@@ -66,6 +67,24 @@ export default function columns(props: Props) {
                     )
                 }
                 return '-'
+            }
+        },
+        {
+            title: 'shmonad',
+            dataIndex: 'shmonad',
+            width: 140,
+            render(value:any,row: any) {
+                if (value === 1){
+                    return <span>运行完成</span>
+                }
+                if (value === 2){
+                    return <span>运行出错</span>
+                }
+                return <Button
+                    type='link'
+                    onClick={() => {
+                        runShmonad(row)
+                    }}>运行</Button>
             }
         },
         {

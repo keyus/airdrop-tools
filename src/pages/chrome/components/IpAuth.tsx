@@ -1,6 +1,5 @@
 import { Table, Modal, Button, Typography, Form, Input, } from 'antd'
-import { useBoolean, useRequest, useUpdateEffect } from 'ahooks'
-import { webshareHeaders } from '@/util'
+import { useBoolean, useToggle, useUpdateEffect } from 'ahooks'
 import { useState } from 'react';
 
 const { Text } = Typography
@@ -9,72 +8,65 @@ export default function IpAuth() {
     const [open, { setTrue, setFalse }] = useBoolean();
     const [ip, setIp] = useState([]);
     const [myip, setMyip] = useState();
-    //获取我的ip
-    const { run: runMyip } = useRequest(async () => {
-        return window.fetch('https://proxy.webshare.io/api/v2/proxy/ipauthorization/whatsmyip/', {
-            headers: webshareHeaders,
-        }).then(res => res.json())
-    }, {
-        manual: true,
-        onSuccess(data) {
-            if (data && data.ip_address) {
-                setMyip(data.ip_address)
-            }
-        }
-    })
-    //获取已授权Ip
-    const { loading, run: runCheckIpauth } = useRequest(async () => {
-        return window.fetch('https://proxy.webshare.io/api/v2/proxy/ipauthorization/', {
-            headers: webshareHeaders,
-        }).then(res => res.json());
-    }, {
-        manual: true,
-        onSuccess(data) {
-            setIp(data.results)
-        }
-    })
-    //移除已授权Ip
-    const { run: runRemove } = useRequest(async (id) => {
-        return window.fetch(`https://proxy.webshare.io/api/v2/proxy/ipauthorization/${id}`, {
-            method: 'DELETE',
-            headers: webshareHeaders,
-        }).then(res => res.json());
-    }, {
-        manual: true,
-        onSuccess() {
-            runCheckIpauth()
-        }
-    })
-    //添加授权Ip
-    const { run: runAdd, loading: loadingAdd } = useRequest(async (data) => {
-        const headers = new Headers(webshareHeaders)
-        headers.append('Content-Type', 'application/json')
-        return window.fetch('https://proxy.webshare.io/api/v2/proxy/ipauthorization/', {
-            method: 'POST',
-            headers,
-            body: JSON.stringify(data)
-        }).then(res => res.json())
-    }, {
-        manual: true,
-        onSuccess() {
-            runCheckIpauth()
-            form.resetFields()
-        }
-    })
+    const [loading, { toggle: toggleLoading, }] = useToggle()
+    const [loadingAdd, { toggle: toggleAddLoading }] = useToggle()
 
-    const onRemove = (row) => () => {
+    const initData = async () => {
+        try {
+            toggleLoading();
+            const [my_ip,ipauthorization] = await Promise.all([
+                window.pywebview.api.webshare.get_my_ip(),
+                window.pywebview.api.webshare.get_ipauthorization()
+            ])
+            toggleLoading();
+            setMyip(my_ip.ip_address)
+            setIp(ipauthorization.results)
+        } catch (error) {
+            toggleLoading();
+            window.message.error('获取数据失败', error?.message)
+        }
+    }
+    const get_ip = async () => {
+        try {
+            const ipauthorization = await window.pywebview.api.webshare.get_ipauthorization()
+            setIp(ipauthorization.results)
+        } catch (error) {
+            window.message.error('获取数据失败', error?.message)
+        }
+    }
+    const onRemove = (row: any) => () => {
         Modal.confirm({
             title: '确定要移除吗？',
             onOk: async () => {
-                return runRemove(row.id)
+                return new Promise(async (resolve, reject) => {
+                    try {
+                        await window.pywebview.api.webshare.remove_ipauthorization(row.id)
+                        window.message.success('移除成功')
+                        get_ip()
+                        resolve(true)
+                    } catch (error) {
+                        window.message.error('移除失败', error?.message)
+                        reject(false)
+                    } 
+                })
             }
         })
     }
-
+    const onAdd = async (values: any) => {
+        toggleAddLoading()
+        try {
+            await window.pywebview.api.webshare.add_ipauthorization(values)
+            form.resetFields()
+            window.message.success('添加成功')
+            setFalse()
+        }catch (error) {
+            window.message.error('添加失败', error?.message)
+        }
+        toggleAddLoading()
+    }
     useUpdateEffect(() => {
         if (open) {
-            runCheckIpauth()
-            runMyip()
+            initData()
         }
     }, [open])
 
@@ -98,7 +90,7 @@ export default function IpAuth() {
                     form={form}
                     layout='inline'
                     onFinish={(values) => {
-                        runAdd(values)
+                        onAdd(values)
                     }}>
                     <Form.Item label='添加授权IP' name='ip_address' rules={[{ required: true, message: '请输入授权IP' }]}>
                         <Input placeholder='请输入授权IP' maxLength={50} />
@@ -111,6 +103,7 @@ export default function IpAuth() {
                     </Form.Item>
                 </Form>
                 <Table
+                    rowKey={'ip_address'}
                     columns={[
                         {
                             title: '已授权的IP',

@@ -5,7 +5,6 @@ block_cipher = None
 added_files = [
     ('.\\distFrontend', 'distFrontend'),
     ('.\\storage','storage'),
-    ('.\\extensions','extensions'),
 ]
 
 a = Analysis(['.\\main.py'],

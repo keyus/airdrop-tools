@@ -109,8 +109,34 @@ export default function Chrome(props = {}) {
         await window.pywebview.api.close_tg(name)
         window.message.success('telegram,关闭成功')
     }
-    const column = columns({ openChromeOne, openTgOne, closeChromeOne, closeTgOne });
+    const runShmonad = async (row: any) => {
+        const name = row.name;
+        // 运行shmonad
+        window.message.open({
+            key: 'shmonad',
+            type: 'loading',
+            content: `${name} shmonad 运行中!`,
+            duration: 0,
+        });
+        try{
+            await window.pywebview.api.testnet.run_shmonad(name);
+            window.message.open({
+                key: 'shmonad',
+                type: 'success',
+                content: `${name} shmonad,运行成功!`,
+                duration: 5,
+            });
+            row.shmonad = 1
+        }catch{
+            row.shmonad = 2
+        }
+        setData([...data])
+    }
+
+    const column = columns({ openChromeOne, openTgOne, closeChromeOne, closeTgOne, runShmonad });
     const x = column.reduce((a, b) => { return a + b.width }, 0)
+
+
 
     return (
         <div style={{ height: '100%' }}>
