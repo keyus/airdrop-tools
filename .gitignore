@@ -9,13 +9,12 @@ lerna-debug.log*
 
 # Python缓存文件
 __pycache__/
-**/__pycache__/
 *.py[cod]
 *$py.class
 *.so
 .Python
 storage/proxy.json
-**/__pycache__
+**/__pycache__/
 **/webshare.txt
 **/private_key.py
 build
