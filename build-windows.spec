@@ -20,6 +20,7 @@ a = Analysis(['.\\main.py'],
              win_private_assemblies=False,
              cipher=block_cipher,
              noarchive=False)
+
 pyz = PYZ(a.pure, a.zipped_data,
              cipher=block_cipher)
 
@@ -39,6 +40,6 @@ exe = EXE(pyz,
           runtime_tmpdir=None,
           console=False,
           disable_windowed_traceback=False,
-          target_arch=None,
+          target_arch='64bit',
           codesign_identity=None,
           entitlements_file=None )

@@ -8,9 +8,8 @@
     "build:frontend": "rsbuild build",
     "dev:backend": "py main.py",
     "start": "bun run dev:backend",
-    "build:windows": "bun run build:frontend && pyinstaller build-windows.spec",
-    "nuitka": "nuitka --include-data-dir=storage=storage --windows-icon-from-ico=./icons/icon.ico --onefile main.py"
-  },
+    "build:windows": "bun run build:frontend && pyinstaller --clean build-windows.spec"
+ },
   "dependencies": {
     "@ant-design/icons": "^5.6.1",
     "@ant-design/v5-patch-for-react-19": "^1.0.3",
