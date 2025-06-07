@@ -72,19 +72,19 @@ export default function columns(props: Props) {
         {
             title: 'shmonad',
             dataIndex: 'shmonad',
-            width: 140,
-            render(value:any,row: any) {
-                if (value === 1){
-                    return <span>运行完成</span>
-                }
-                if (value === 2){
-                    return <span>运行出错</span>
-                }
-                return <Button
-                    type='link'
-                    onClick={() => {
-                        runShmonad(row)
-                    }}>运行</Button>
+            width: 160,
+            render(value: any, row: any) {
+                return (
+                    <div>
+                        {value === 1 && <span>完成</span>}
+                        {value === 2 && <span>出错</span>}
+                        <Button
+                            type='link'
+                            onClick={() => {
+                                runShmonad(row)
+                            }}>运行</Button>
+                    </div>
+                )
             }
         },
         {

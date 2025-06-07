@@ -1,7 +1,7 @@
 
 import { useState, } from 'react'
 import { Input, Form, Checkbox, Space, Table, } from 'antd'
-import { useInterval, useMount, useUpdateEffect } from 'ahooks'
+import { useInterval, useMount, useUpdate, useUpdateEffect } from 'ahooks'
 import { SearchOutlined, } from '@ant-design/icons'
 import Open from './components/Open'
 import Close from './components/Close'
@@ -14,6 +14,7 @@ import './style.css';
 let originData = []
 export default function Chrome(props = {}) {
     const [form] = Form.useForm();
+    const update = useUpdate();
     const open = Form.useWatch('open', form);
     const search = Form.useWatch('search', form);
     const [data, setData] = useState([])
@@ -111,6 +112,8 @@ export default function Chrome(props = {}) {
     }
     const runShmonad = async (row: any) => {
         const name = row.name;
+        row.shmonad = 0;
+        update();
         // 运行shmonad
         window.message.open({
             key: 'shmonad',
@@ -118,7 +121,7 @@ export default function Chrome(props = {}) {
             content: `${name} shmonad 运行中!`,
             duration: 0,
         });
-        try{
+        try {
             await window.pywebview.api.testnet.run_shmonad(name);
             window.message.open({
                 key: 'shmonad',
@@ -127,7 +130,7 @@ export default function Chrome(props = {}) {
                 duration: 5,
             });
             row.shmonad = 1
-        }catch{
+        } catch {
             row.shmonad = 2
         }
         setData([...data])
@@ -151,7 +154,12 @@ export default function Chrome(props = {}) {
                     <Form.Item
                         name='search'
                     >
-                        <Input size="large" max={20} onPressEnter={form.submit} placeholder="搜索名字" prefix={<SearchOutlined />} />
+                        <Input size="large"
+                            max={20}
+                            onPressEnter={form.submit}
+                            placeholder="搜索名字"
+                            allowClear
+                            prefix={<SearchOutlined />} />
                     </Form.Item>
                     <Form.Item
                         name='open'

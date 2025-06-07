@@ -12,7 +12,7 @@ from service.util import (
     get_name_proxy,
     clear_user_data,
 )
-from service.bookmark import enable_bookmark_bar, add_name_bookmark
+from service.bookmark import add_name_bookmark
 from service.testnet.monad.monad import Monad
 
 # chrome_path = "C:\\Program Files\\Google\\Chrome\\Application\\chrome.exe"
@@ -53,7 +53,7 @@ class Api:
                 print("ks", ip, port)
             
             # 在启动Chrome前修改Preferences文件启用书签栏
-            enable_bookmark_bar(user_data_dir)
+            # enable_bookmark_bar(user_data_dir)
             # 添加书签
             add_name_bookmark(user_data_dir, name)
             if not url_config["use"]:
