@@ -14,7 +14,7 @@ export default function IpAuth() {
     const initData = async () => {
         try {
             toggleLoading();
-            const [my_ip,ipauthorization] = await Promise.all([
+            const [my_ip, ipauthorization] = await Promise.all([
                 window.pywebview.api.webshare.get_my_ip(),
                 window.pywebview.api.webshare.get_ipauthorization()
             ])
@@ -47,7 +47,7 @@ export default function IpAuth() {
                     } catch (error) {
                         window.message.error('移除失败', error?.message)
                         reject(false)
-                    } 
+                    }
                 })
             }
         })
@@ -59,7 +59,7 @@ export default function IpAuth() {
             form.resetFields()
             window.message.success('添加成功')
             setFalse()
-        }catch (error) {
+        } catch (error) {
             window.message.error('添加失败', error?.message)
         }
         toggleAddLoading()
@@ -78,7 +78,28 @@ export default function IpAuth() {
                 Ip授权
             </Button>
             <Modal
-                title={<div>Ip授权<span style={{ fontSize: 12, marginLeft: 15 }}>(我的ip: <Text copyable title={myip}>{myip}</Text>)</span></div>}
+                title={
+                    <div>
+                        Ip授权
+                        {
+                            myip &&
+                            <span style={{ fontSize: 12, marginLeft: 15 }}>
+                                (我的ip: <Text copyable title={myip}>{myip}</Text>)
+                                <Button
+                                    type='link'
+                                    loading={loadingAdd}
+                                    onClick={() => {
+                                        onAdd({
+                                            ip_address: myip
+                                        })
+                                    }}>
+                                    一键授权
+                                </Button>
+                            </span>
+                        }
+
+                    </div>
+                }
                 open={open}
                 onCancel={setFalse}
                 footer={null}
@@ -93,7 +114,7 @@ export default function IpAuth() {
                         onAdd(values)
                     }}>
                     <Form.Item label='添加授权IP' name='ip_address' rules={[{ required: true, message: '请输入授权IP' }]}>
-                        <Input placeholder='请输入授权IP' maxLength={50} />
+                        <Input placeholder='请输入授权IP' disabled={loadingAdd} maxLength={50} />
                     </Form.Item>
                     <Form.Item>
                         <Button
