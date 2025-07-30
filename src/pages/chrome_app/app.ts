@@ -5,9 +5,7 @@ import bitgetIcon from '../../assets/app/bitget.jpg'
 import phantomIcon from '../../assets/app/phantom.png'
 import protonIcon from '../../assets/app/proton.png'
 import nordvpnIcon from '../../assets/app/nordvpn.png'
-import surfsharkIcon from '../../assets/app/surfshark.png'
 import canvasblockerIcon from '../../assets/app/canvasblocker.png'
-import webshareIcon from '../../assets/app/webshare.png'
 import keplrIcon from '../../assets/app/keplr.png'
 
 
@@ -69,24 +67,10 @@ export default [
         url: 'https://chromewebstore.google.com/detail/nordvpn-vpn-proxy-for-pri/fjoaledfpmneenckfbpdfhkmimnjocfa'
     },
     {
-        id: 'ailoabdmgclmfmhdagmlohpjlbpffblp',
-        name: 'Surfshark VPN',
-        icons: surfsharkIcon,
-        description: 'Browse the web freely with secure',
-        url: 'https://chromewebstore.google.com/detail/surfshark-vpn-extension/ailoabdmgclmfmhdagmlohpjlbpffblp'
-    },
-    {
         id: 'nomnklagbgmgghhjidfhnoelnjfndfpd',
         name: 'Canvas Blocker',
         icons: canvasblockerIcon,
         description: 'Fingerprint Protect',
         url: 'https://chromewebstore.google.com/detail/canvas-blocker-fingerprin/nomnklagbgmgghhjidfhnoelnjfndfpd'
     },
-    {
-        id: "bdokeillmfmaogjpficejjcjekcflkdh",
-        name: 'Webshare',
-        icons: webshareIcon,
-        description: 'Webshare',
-        url: 'https://chromewebstore.google.com/detail/webshare-proxy-extension/bdokeillmfmaogjpficejjcjekcflkdh'
-    }
 ]

@@ -26,12 +26,12 @@ export default defineConfig({
         pluginReact(),
         pluginSvgr({ mixedImport: true }),
     ],
+    resolve: {
+        alias: {
+            '@': './src/',
+        }
+    },
     source: {
         define: publicVars,
-        alias: () => {
-            return {
-                '@': './src/',
-            };
-        },
     },
 });

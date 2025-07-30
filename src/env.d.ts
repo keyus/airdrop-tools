@@ -66,6 +66,7 @@ declare interface Window {
         get_ipauthorization: () => Promise<any>
         remove_ipauthorization: (id: number) => Promise<any>
         add_ipauthorization: (data: { ip_address: string }) => Promise<any>
+        update_proxy: () => Promise<any>
       }
       testnet: {
         run_shmonad: (name: string) => Promise<void>

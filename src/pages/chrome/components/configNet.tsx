@@ -1,6 +1,6 @@
-import { useMemo,  } from 'react'
-import { Button, Modal, Input, Form, Tabs, Switch,  } from 'antd'
-import { useBoolean, useMount,  } from 'ahooks';
+import { useMemo, useState, } from 'react'
+import { Button, Modal, Input, Form, Tabs, Switch, } from 'antd'
+import { useBoolean, useMount, } from 'ahooks';
 import IpAuth from './IpAuth';
 
 export default function ConfigNet({ onConfigWallet }:
@@ -188,6 +188,7 @@ function OpenUrlConfig(props: { onOk: () => void }) {
 function ProxyConfig(props: { onOk: () => void }) {
     const { onOk } = props;
     const [form] = Form.useForm();
+    const [updateLoading, setUpdateLoading] = useState(false);
     const proxyValue = Form.useWatch('proxy', form)
     const onSubmit = async ({ proxy, use }) => {
         if (proxy) {
@@ -203,7 +204,9 @@ function ProxyConfig(props: { onOk: () => void }) {
         window.message.success('代理配置成功');
         onOk()
     }
-    useMount(async () => {
+
+    // 初始化表单数据
+    const initData = async () => {
         const proxyConfig = await window.pywebview.api.app_config.get_proxy_config();
         const value = proxyConfig.proxy.join('\n');
         const use = proxyConfig.use;
@@ -211,6 +214,10 @@ function ProxyConfig(props: { onOk: () => void }) {
             proxy: value,
             use,
         })
+    }
+
+    useMount(() => {
+        initData()
     })
 
     const lens = useMemo(() => {
@@ -221,6 +228,14 @@ function ProxyConfig(props: { onOk: () => void }) {
         }
     }, [proxyValue])
 
+    const updateProxy = async () => {
+        setUpdateLoading(true);
+        await window.pywebview.api.webshare.update_proxy();
+        window.message.success('代理更新成功');
+        initData();
+        setUpdateLoading(false);
+    }
+
     return (
         <>
             <Form
@@ -230,7 +245,15 @@ function ProxyConfig(props: { onOk: () => void }) {
             >
                 <Form.Item
                     name='proxy'
-                    extra={`当前有效的代理数量：${lens}`}
+                    extra={
+                        <div>
+                            当前有效的代理数量：{lens}
+                            <Button
+                                type='link'
+                                loading={updateLoading}
+                                onClick={updateProxy}>一键更新代理</Button>
+                        </div>
+                    }
                 >
                     <Input.TextArea rows={8} />
                 </Form.Item>
@@ -240,10 +263,11 @@ function ProxyConfig(props: { onOk: () => void }) {
                 >
                     <Switch checkedChildren='启用' unCheckedChildren='禁用' />
                 </Form.Item>
+
                 <Form.Item
                     label='Ip授权'
                 >
-                    <IpAuth/>
+                    <IpAuth />
                 </Form.Item>
                 <Form.Item
                     style={{ textAlign: 'right' }}
